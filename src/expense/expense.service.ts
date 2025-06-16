@@ -71,29 +71,35 @@ export class ExpenseService {
     return 'User deleted successfully';
   }
 
-  updateExpenseById(id: number, updateUserDto: UpdateExpenseDto) {
+  updateExpenseById(id: number, updateExpenseDto: UpdateExpenseDto) {
     const index = this.expense.findIndex((el) => el.id === id);
     if (index === -1) throw new BadRequestException('User not found');
 
     const updateReq: UpdateExpenseDto = {};
-    if (updateUserDto.category) {
-      updateReq.category = updateUserDto.category;
+    if (updateExpenseDto.category) {
+      updateReq.category = updateExpenseDto.category;
     }
 
-    if (updateUserDto.productName) {
-      updateReq.productName = updateUserDto.productName;
+    if (updateExpenseDto.productName) {
+      updateReq.productName = updateExpenseDto.productName;
     }
 
-    if (updateUserDto.quantity) {
-      updateReq.quantity = updateUserDto.quantity;
+    if (updateExpenseDto.quantity) {
+      updateReq.quantity = updateExpenseDto.quantity;
+        updateReq.totalPrice = updateExpenseDto.quantity * (updateExpenseDto.price || this.expense[index].price);
     }
-    if (updateUserDto.price) {
-      updateReq.price = updateUserDto.price;
+    if (updateExpenseDto.price) {
+      updateReq.price = updateExpenseDto.price;
+        updateReq.totalPrice = (updateExpenseDto.quantity || this.expense[index].quantity) * updateExpenseDto.price;
     }
+    
+  
+    
 
     this.expense[index] = {
       ...this.expense[index],
       ...updateReq,
+      
     };
 
     return 'User update successfully';

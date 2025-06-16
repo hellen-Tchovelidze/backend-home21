@@ -3,4 +3,5 @@ export class UpdateExpenseDto {
   productName?: string;
   quantity?: number;
   price?: number;
+  totalPrice?: number;
 }
