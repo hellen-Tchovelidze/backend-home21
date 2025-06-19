@@ -12,11 +12,11 @@ export class UsersService {
   private users = [
     {
       id: 1,
-      email: 'rag@gmail.com',
+      email: 'elg@gmail.com',
       firstName: 'elene',
       lastName: 'tchovelidze',
       phoneNumber: '598899948',
-      gender: 'no',
+      gender: 'female',
     },
     {
       id: 2,
@@ -24,12 +24,41 @@ export class UsersService {
       firstName: 'eledddne',
       lastName: 'tchovdddelidze',
       phoneNumber: '598899948',
-      gender: 'no',
+      gender: 'male',
     },
   ];
 
-  getAllUsers() {
-    return this.users;
+  getAllUsers(
+    page = 1,
+    take = 30,
+    filters?: { gender?: string; email?: string },
+  ) {
+    let result = [...this.users];
+
+    const genderMap = {
+      m: 'male',
+      f: 'female',
+    };
+
+    if (filters?.gender) {
+      const mappedGender =
+        genderMap[filters.gender.toLowerCase()] ?? filters.gender.toLowerCase();
+      result = result.filter(
+        (user) => user.gender.toLowerCase() === mappedGender,
+      );
+    }
+
+    if (filters?.email) {
+      const emailFilter = filters.email.toLowerCase();
+      result = result.filter((user) =>
+        user.email.toLowerCase().startsWith(emailFilter),
+      );
+    }
+
+    const start = (page - 1) * take;
+    const end = start + take;
+
+    return result.slice(start, end);
   }
 
   getUserById(id: number) {

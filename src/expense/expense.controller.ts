@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { ExpenseService } from './expense.service';
 import { CreateExpenseDto } from './dto/create-expense-dto';
@@ -14,8 +15,22 @@ import { CreateExpenseDto } from './dto/create-expense-dto';
 export class ExpenseController {
   constructor(private readonly expenseService: ExpenseService) {}
   @Get()
-  getAllExpense() {
-    return this.expenseService.getAllExpense();
+  getAllExpenses(
+    @Query('page') page: string,
+    @Query('take') take: string,
+    @Query('category') category: string,
+    @Query('priceFrom') priceFrom: string,
+    @Query('priceTo') priceTo: string,
+  ) {
+    return this.expenseService.getAllExpense(
+      Number(page) || 1,
+      Number(take) || 30,
+      {
+        category,
+        priceFrom: priceFrom ? Number(priceFrom) : undefined,
+        priceTo: priceTo ? Number(priceTo) : undefined,
+      },
+    );
   }
 
   @Get(':id')

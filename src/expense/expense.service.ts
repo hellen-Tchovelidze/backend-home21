@@ -27,9 +27,29 @@ export class ExpenseService {
       totalPrice: 10,
     },
   ];
+  getAllExpense(
+    page = 1,
+    take = 30,
+    filters: { category?: string; priceFrom?: number; priceTo?: number } = {},
+  ) {
+    let result = [...this.expense];
 
-  getAllExpense() {
-    return this.expense;
+    if (filters.category) {
+      result = result.filter((e) => e.category === filters.category);
+    }
+
+    if (typeof filters.priceFrom === 'number') {
+      result = result.filter((e) => e.price >= filters.priceFrom!);
+    }
+
+    if (typeof filters.priceTo === 'number') {
+      result = result.filter((e) => e.price <= filters.priceTo!);
+    }
+
+    const start = (page - 1) * take;
+    const end = start + take;
+
+    return result.slice(start, end);
   }
 
   getExpenseById(id: number) {
@@ -86,20 +106,20 @@ export class ExpenseService {
 
     if (updateExpenseDto.quantity) {
       updateReq.quantity = updateExpenseDto.quantity;
-        updateReq.totalPrice = updateExpenseDto.quantity * (updateExpenseDto.price || this.expense[index].price);
+      updateReq.totalPrice =
+        updateExpenseDto.quantity *
+        (updateExpenseDto.price || this.expense[index].price);
     }
     if (updateExpenseDto.price) {
       updateReq.price = updateExpenseDto.price;
-        updateReq.totalPrice = (updateExpenseDto.quantity || this.expense[index].quantity) * updateExpenseDto.price;
+      updateReq.totalPrice =
+        (updateExpenseDto.quantity || this.expense[index].quantity) *
+        updateExpenseDto.price;
     }
-    
-  
-    
 
     this.expense[index] = {
       ...this.expense[index],
       ...updateReq,
-      
     };
 
     return 'User update successfully';
