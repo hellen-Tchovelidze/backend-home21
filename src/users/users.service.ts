@@ -1,8 +1,11 @@
 import {
   BadRequestException,
+  Body,
   HttpException,
   HttpStatus,
   Injectable,
+  NotFoundException,
+  Post,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-users-dto';
 import { UpdateUserDto } from './dto/update-users-dito';
@@ -27,6 +30,8 @@ export class UsersService {
       lastName: 'tchovelidze',
       phoneNumber: '598899948',
       gender: 'female',
+      subscriptionStartDate: new Date(),
+      subscriptionEndDate: new Date(new Date().setMonth(new Date().getMonth() + 1)),
     },
     {
       id: 2,
@@ -35,6 +40,8 @@ export class UsersService {
       lastName: 'tchovdddelidze',
       phoneNumber: '598899948',
       gender: 'male',
+       subscriptionStartDate: new Date(),
+    subscriptionEndDate: new Date(new Date().setMonth(new Date().getMonth() + 1)),
     },
   ];
 
@@ -94,6 +101,12 @@ export class UsersService {
       ? this.users[this.users.length - 1]?.id
       : 0;
 
+
+      const now = new Date();
+const oneMonthLater = new Date();
+oneMonthLater.setMonth(now.getMonth() + 1);
+
+
     const newUser = {
       id: lastId + 1,
       email,
@@ -101,6 +114,8 @@ export class UsersService {
       lastName,
       phoneNumber,
       gender,
+      subscriptionStartDate: now,
+      subscriptionEndDate: oneMonthLater,
     };
     this.users.push(newUser);
 
@@ -146,4 +161,20 @@ export class UsersService {
 
     return 'User update successfully';
   }
+  findByEmail(email: string) {
+    return this.users.find((user) => user.email === email);
+  }
+
+  @Post('upgrade-subscription')
+  upgradeSubscription(email: string) {
+    const user = this.findByEmail(email); // ← შეცვლილია ეს ხაზი
+    if (!user) throw new NotFoundException('User not found');
+  
+    const currentEnd = new Date(user.subscriptionEndDate);
+    currentEnd.setMonth(currentEnd.getMonth() + 1);
+    user.subscriptionEndDate = currentEnd;
+  
+    return { message: 'Subscription upgraded', newEndDate: currentEnd };
+  }
+  
 }

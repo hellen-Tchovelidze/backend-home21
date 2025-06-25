@@ -59,4 +59,9 @@ export class UsersController {
   updateUser(@Param('id') id, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.updateUserById(Number(id), updateUserDto);
   }
+
+  @Post('upgrade-subscription')
+  upgradeSubscription(@Body('email') email: string) {
+    return this.usersService.upgradeSubscription(email);
+  }
 }

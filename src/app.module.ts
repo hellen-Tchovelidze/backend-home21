@@ -5,7 +5,8 @@ import { UsersModule } from './users/users.module';
 import { ExpenseModule } from './expense/expense.module';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
-import { PaymentModule } from './payment/payment.module';
+// import { PaymentModule } from './payment/payment.module';
+import { ProductsModule } from './products/products.module';
 
 @Module({
   imports: [
@@ -13,7 +14,8 @@ import { PaymentModule } from './payment/payment.module';
     MongooseModule.forRoot(process.env.MONGO_URL as string),
     UsersModule,
     ExpenseModule,
-    PaymentModule,
+    // PaymentModule,
+    ProductsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
