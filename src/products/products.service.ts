@@ -35,7 +35,7 @@ export class ProductsService {
     return { sucsess: 'ok', data: newProducts };
   }
   findAll() {
-    return this.prodactModel
+    return this.prodactModel.find()
   }
 
 
