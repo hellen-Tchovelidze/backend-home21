@@ -18,9 +18,15 @@ export class User {
   payzeCustomerId: string | null;
 
   @Prop({
+    type: String,
+    required: true,
+  })
+  subscriptionEndDate: Date;
+
+  @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'products',
-    required: true,
+    required: false,
   })
   products: mongoose.Types.ObjectId;
 }
